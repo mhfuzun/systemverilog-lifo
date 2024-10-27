@@ -32,7 +32,6 @@ module lifo
     reg [DATA_WIDTH - 1 : 0] store_memory [0 : DEPTH - 1];
     
     reg [MEMORY_ADDR_WIDTH - 1 : 0] pointer_r;
-    reg non_empty_r; 
     
     wire push_w, pop_w, empty_w, full_w;
     
@@ -47,7 +46,6 @@ module lifo
     always @(posedge clk_i, posedge reset_i) begin
         if (reset_i) begin
             pointer_r <= 0;
-            non_empty_r <= 0;
         end else begin
             case ({push_w, pop_w})
                 2'b00: pointer_r <=  pointer_r;
@@ -55,8 +53,6 @@ module lifo
                 2'b10: pointer_r <= (pointer_r + 1);
                 2'b11: pointer_r <=  pointer_r;
             endcase
-            
-            non_empty_r <= (non_empty_r & ~(pop_w & (pointer_r == 1))) | push_w;
         end
     end
     
